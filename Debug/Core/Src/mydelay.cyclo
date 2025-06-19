@@ -1,0 +1,3 @@
+../Core/Src/mydelay.c:11:6:TIM2_Init	1
+../Core/Src/mydelay.c:28:6:delay_us	2
+../Core/Src/mydelay.c:36:6:delay_ms	2
