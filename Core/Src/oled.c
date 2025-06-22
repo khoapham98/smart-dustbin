@@ -9,7 +9,25 @@
 #include "servo.h"
 #include "string.h"
 
-void I2C_send_stop()
+void OLED_Init()
+{
+	I2C_Init();
+	I2C_start();
+	I2C_send_addr(SSD1306_ADDR, WRITE);
+	I2C_send_control_byte(CMD);
+	I2C_send_byte(0xAF);
+	I2C_stop();
+}
+
+void I2C_send_control_byte(ctrl_t ctrl_byte)
+{
+	uint32_t* I2C_DR = (uint32_t*) (I2C1_BASE_ADDR + 0x10);
+	uint32_t* I2C_SR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x14);
+	*I2C_DR = ctrl_byte;
+	while (((*I2C_SR1 >> 7) & 1) == 0);
+}
+
+void I2C_stop()
 {
 	uint32_t* I2C_CR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x00);
 	uint32_t* I2C_SR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x14);
@@ -17,40 +35,37 @@ void I2C_send_stop()
 	*I2C_CR1 |= 1 << 9;		// send STOP
 }
 
-void I2C_send_data(char* str)
+void I2C_send_byte(uint8_t data)
 {
 	uint32_t* I2C_DR = (uint32_t*) (I2C1_BASE_ADDR + 0x10);
 	uint32_t* I2C_SR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x14);
-	int size = strlen(str);
-	for (int i = 0; i < size; i++)
-	{
-		while (((*I2C_SR1 >> 7) & 1) == 0); // wait until DR register is empty
-		*I2C_DR = str[i];
-		while (((*I2C_SR1 >> 2) & 1) == 0);	// wait until data has been transferred
-	}
+	*I2C_DR = data;
+	while (((*I2C_SR1 >> 7) & 1) == 0);	// wait until data has been transferred
 }
 
-bool_t I2C_send_start(uint8_t slave_addr, mode_t mode)
+void I2C_send_addr(uint8_t slave_addr, mode_t mode)
 {
-	uint32_t* I2C_CR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x00);
-	uint32_t* I2C_DR = (uint32_t*) (I2C1_BASE_ADDR + 0x10);
+	uint8_t* I2C_DR = (uint8_t*) (I2C1_BASE_ADDR + 0x10);
 	uint32_t* I2C_SR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x14);
 	uint32_t* I2C_SR2 = (uint32_t*) (I2C1_BASE_ADDR + 0x18);
 	/*	ADDRESS PHASE  */
+	// send address to slave and select WRITE mode
+	*I2C_DR = (slave_addr << 1) | mode;
+	// wait until the address transmission is completed
+	while (((*I2C_SR1 >> 1) & 1) == 0);
+	// read SR1 and SR2 to clear ADDR bit
+	volatile int tmp = *I2C_SR1;
+	tmp = *I2C_SR2;
+}
+
+void I2C_start()
+{
+	uint32_t* I2C_CR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x00);
+	uint32_t* I2C_SR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x14);
 	// send START
 	*I2C_CR1 |= 1 << 8;
 	// wait until START condition is generated and operate at Master mode
 	while ((*I2C_SR1 & 1) == 0);
-	// send address to slave and select WRITE mode
-	*I2C_DR = (slave_addr << 1) | mode;
-	// check if there is NACK
-	if (((*I2C_SR1 >> 10) & 1) == 1) { return FALSE; }
-	// wait until the address transmission is completed
-	while (((*I2C_SR1 >> 1) & 1) == 0);
-	// read SR1 and Sr2 to clear ADDR bit
-	volatile int tmp = *I2C_SR1;
-	tmp = *I2C_SR2;
-	return TRUE;
 }
 
 /*
@@ -60,6 +75,7 @@ bool_t I2C_send_start(uint8_t slave_addr, mode_t mode)
  */
 void I2C_Init()
 {
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	uint32_t* GPIOB_MODER = (uint32_t*) (GPIOB_BASE_ADDR + 0x00);
 	uint32_t* GPIOB_OTYPER = (uint32_t*) (GPIOB_BASE_ADDR + 0x04);
 	uint32_t* GPIOB_PUPDR = (uint32_t*) (GPIOB_BASE_ADDR + 0x0C);

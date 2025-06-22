@@ -14,16 +14,24 @@ int main()
 	TIM2_Init();
 	USART2_Init();
 	TIM3_Init();
-	I2C_Init();
+	OLED_Init();
 
 	int check = 0;
 	while (1)
 	{
-		if (check == 0 && I2C_send_start(SSD1306_ADDR, WRITE) == TRUE)
+		if (check == 0)
 		{
-			I2C_send_data("hello world");
+			I2C_start();
+			I2C_send_control_byte(DATA);
+			I2C_send_byte('k');
+//			I2C_send_control_byte(DATA);
+//			I2C_send_byte('h');
+//			I2C_send_control_byte(DATA);
+//			I2C_send_byte('o');
+//			I2C_send_control_byte(DATA);
+//			I2C_send_byte('a');
+			I2C_stop();
 			check++;
-			I2C_send_stop();
 		}
 	}
 	return 0;

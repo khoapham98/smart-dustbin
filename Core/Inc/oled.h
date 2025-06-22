@@ -20,8 +20,17 @@ typedef enum
 	WRITE, READ
 } mode_t;
 
-void I2C_Init();
-bool_t I2C_send_start(uint8_t slave_addr, mode_t mode);
-void I2C_send_data(char* str);
+typedef enum
+{
+	CMD = 0x00,
+	DATA = 0x40
+} ctrl_t;
 
+void I2C_Init();
+void OLED_Init();
+void I2C_start();
+void I2C_send_addr(uint8_t slave_addr, mode_t mode);
+void I2C_send_control_byte(ctrl_t ctrl_byte);
+void I2C_send_byte(uint8_t data);
+void I2C_stop();
 #endif /* INC_OLED_H_ */
