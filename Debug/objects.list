@@ -1,6 +1,7 @@
 "./Core/Src/hcsr04.o"
 "./Core/Src/main.o"
 "./Core/Src/mydelay.o"
+"./Core/Src/oled.o"
 "./Core/Src/servo.o"
 "./Core/Src/stm32f4xx_hal_msp.o"
 "./Core/Src/stm32f4xx_it.o"
