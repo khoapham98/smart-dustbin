@@ -12,11 +12,6 @@
 
 typedef enum
 {
-	FALSE, TRUE
-} bool_t;
-
-typedef enum
-{
 	WRITE, READ
 } mode_t;
 
@@ -26,11 +21,11 @@ typedef enum
 	DATA = 0x40
 } ctrl_t;
 
+void check_ACK();
 void I2C_Init();
 void OLED_Init();
 void I2C_start();
 void I2C_send_addr(uint8_t slave_addr, mode_t mode);
-void I2C_send_control_byte(ctrl_t ctrl_byte);
-void I2C_send_byte(uint8_t data);
+void I2C_send_byte(ctrl_t ctrl_byte, uint8_t data);
 void I2C_stop();
 #endif /* INC_OLED_H_ */
