@@ -22,6 +22,7 @@ typedef enum
 } ctrl_t;
 
 void check_ACK();
+void SSD1306_Init();
 void I2C_Init();
 void OLED_Init();
 void I2C_start();
