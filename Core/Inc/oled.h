@@ -21,12 +21,15 @@ typedef enum
 	DATA = 0x40
 } ctrl_t;
 
-void check_ACK();
 void SSD1306_Init();
 void I2C_Init();
 void OLED_Init();
+void OLED_FillWhite();
+void OLED_FillBlack();
 void I2C_start();
+void OLED_WriteData(uint8_t data);
+void OLED_WriteCMD(uint8_t cmd);
 void I2C_send_addr(uint8_t slave_addr, mode_t mode);
-void I2C_send_byte(ctrl_t ctrl_byte, uint8_t data);
+void I2C_send_byte(uint8_t data);
 void I2C_stop();
 #endif /* INC_OLED_H_ */

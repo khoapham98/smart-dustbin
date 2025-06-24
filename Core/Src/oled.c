@@ -8,84 +8,117 @@
 #include "oled.h"
 #include "servo.h"
 #include "string.h"
-#include "uart.h"
+
+void OLED_FillBlack()
+{
+    // Set column address range (0-127)
+	OLED_WriteCMD(0x21);  // Set column address
+	OLED_WriteCMD(0x00);  // Column start = 0
+	OLED_WriteCMD(0x7F);  // Column end = 127
+
+    // Set page address range (0-3 cho màn hình 128x32)
+	OLED_WriteCMD(0x22);  // Set page address
+	OLED_WriteCMD(0x00);  // Page start = 0
+	OLED_WriteCMD(0x03);  // Page end = 3 (cho 32 pixel height)
+
+    // Fill whole screen (4 pages x 128 columns)
+    for (int page = 0; page < 4; page++) {
+        for (int col = 0; col < 128; col++) {
+            OLED_WriteData(0x00);
+        }
+    }
+}
+
+void OLED_FillWhite()
+{
+    // Set column address range (0-127)
+	OLED_WriteCMD(0x21);  // Set column address
+	OLED_WriteCMD(0x00);  // Column start = 0
+	OLED_WriteCMD(0x7F);  // Column end = 127
+
+    // Set page address range (0-3 cho màn hình 128x32)
+	OLED_WriteCMD(0x22);  // Set page address
+	OLED_WriteCMD(0x00);  // Page start = 0
+	OLED_WriteCMD(0x03);  // Page end = 3 (cho 32 pixel height)
+
+    // Fill whole screen (4 pages x 128 columns)
+    for (int page = 0; page < 4; page++) {
+        for (int col = 0; col < 128; col++) {
+            OLED_WriteData(0xFF);
+        }
+    }
+}
 
 void SSD1306_Init()
 {
 	HAL_Delay(100);
-	I2C_send_byte(CMD, 0xAE); //display off
+	OLED_WriteCMD(0xAE); //display off
 
-	I2C_send_byte(CMD, 0x20); //Set Memory Addressing Mode
-	I2C_send_byte(CMD, 0x00); // 00b,Horizontal Addressing Mode; 01b,Vertical Addressing Mode;
+	OLED_WriteCMD(0x20); //Set Memory Addressing Mode
+	OLED_WriteCMD(0x00); // 00b,Horizontal Addressing Mode; 01b,Vertical Addressing Mode;
 							  // 10b,Page Addressing Mode (RESET); 11b,Invalid
 
-	I2C_send_byte(CMD, 0xB0); //Set Page Start Address for Page Addressing Mode,0-7
+	OLED_WriteCMD(0xB0); //Set Page Start Address for Page Addressing Mode,0-7
 
-	I2C_send_byte(CMD, 0xC8); //Set COM Output Scan Direction
+	OLED_WriteCMD(0xC8); //Set COM Output Scan Direction
 
-	I2C_send_byte(CMD, 0x00); //---set low column address
-	I2C_send_byte(CMD, 0x10); //---set high column address
+	OLED_WriteCMD(0x00); //---set low column address
+	OLED_WriteCMD(0x10); //---set high column address
 
-	I2C_send_byte(CMD, 0x40); //--set start line address - CHECK
+	OLED_WriteCMD(0x40); //--set start line address - CHECK
 
-	I2C_send_byte(CMD, 0xFF);
+	OLED_WriteCMD(0xFF);
 
-	I2C_send_byte(CMD, 0xA1); //--set segment re-map 0 to 127 - CHECK
+	OLED_WriteCMD(0xA1); //--set segment re-map 0 to 127 - CHECK
 
-	I2C_send_byte(CMD, 0xA6); //--set normal color
-	I2C_send_byte(CMD, 0xA8); //--set multiplex ratio(1 to 64) - CHECK
-	I2C_send_byte(CMD, 0x1F); //
-	I2C_send_byte(CMD, 0xA4); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
+	OLED_WriteCMD(0xA6); //--set normal color
+	OLED_WriteCMD(0xA8); //--set multiplex ratio(1 to 64) - CHECK
+	OLED_WriteCMD(0x1F); //
+	OLED_WriteCMD(0xA4); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
 
-	I2C_send_byte(CMD, 0xD3); //-set display offset - CHECK
-	I2C_send_byte(CMD, 0x00); //-not offset
+	OLED_WriteCMD(0xD3); //-set display offset - CHECK
+	OLED_WriteCMD(0x00); //-not offset
 
-	I2C_send_byte(CMD, 0xD5); //--set display clock divide ratio/oscillator frequency
-	I2C_send_byte(CMD, 0xF0); //--set divide ratio
+	OLED_WriteCMD(0xD5); //--set display clock divide ratio/oscillator frequency
+	OLED_WriteCMD(0xF0); //--set divide ratio
 
-	I2C_send_byte(CMD, 0xD9); //--set pre-charge period
-	I2C_send_byte(CMD, 0x22); //
+	OLED_WriteCMD(0xD9); //--set pre-charge period
+	OLED_WriteCMD(0x22); //
 
-	I2C_send_byte(CMD, 0xDA); //--set com pins hardware configuration - CHECK
-	I2C_send_byte(CMD, 0x02);
-	I2C_send_byte(CMD, 0xDB); //--set vcomh
-	I2C_send_byte(CMD, 0x20); //0x20,0.77xVcc
+	OLED_WriteCMD(0xDA); //--set com pins hardware configuration - CHECK
+	OLED_WriteCMD(0x02);
+	OLED_WriteCMD(0xDB); //--set vcomh
+	OLED_WriteCMD(0x20); //0x20,0.77xVcc
 
-	I2C_send_byte(CMD, 0x8D); //--set DC-DC enable
-	I2C_send_byte(CMD, 0x14); //
-	I2C_send_byte(CMD, 0xAF); //--turn on SSD1306 panel
+	OLED_WriteCMD(0x8D); //--set DC-DC enable
+	OLED_WriteCMD(0x14); //
+	OLED_WriteCMD(0xAF); //--turn on SSD1306 panel
 }
 
-void OLED_Init()
+void OLED_WriteData(uint8_t data)
 {
-	I2C_send_byte(CMD, 0xAE);  // Display OFF
-	I2C_send_byte(CMD, 0x8D); I2C_send_byte(CMD, 0x14);  // Charge pump ON
-	I2C_send_byte(CMD, 0xAF);
+	I2C_start();
+	I2C_send_addr(SSD1306_ADDR, WRITE);
+	I2C_send_byte(DATA);
+	I2C_send_byte(data);
+	I2C_stop();
 }
 
-void check_ACK()
+void OLED_WriteCMD(uint8_t cmd)
 {
-	uint32_t* I2C_SR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x14);
-	if (((*I2C_SR1 >> 10) & 1) == 0)
-	{
-		UART_send_string("Data is sent!\n");
-	}
-	else
-	{
-		UART_send_string("Data is not sent!!!\n");
-	}
+	I2C_start();
+	I2C_send_addr(SSD1306_ADDR, WRITE);
+	I2C_send_byte(CMD);
+	I2C_send_byte(cmd);
+	I2C_stop();
 }
 
-void I2C_send_byte(ctrl_t ctrl_byte, uint8_t data)
+void I2C_send_byte(uint8_t data)
 {
 	uint8_t* I2C_DR = (uint8_t*) (I2C1_BASE_ADDR + 0x10);
 	uint32_t* I2C_SR1 = (uint32_t*) (I2C1_BASE_ADDR + 0x14);
-	*I2C_DR = ctrl_byte;
-	while (((*I2C_SR1 >> 7) & 1) == 0);	// wait until data has been transferred
-	check_ACK();
 	*I2C_DR = data;
 	while (((*I2C_SR1 >> 7) & 1) == 0);	// wait until data has been transferred
-	check_ACK();
 }
 
 void I2C_stop()
@@ -104,10 +137,6 @@ void I2C_send_addr(uint8_t slave_addr, mode_t mode)
 	*I2C_DR = (slave_addr << 1) | mode;
 	// wait until the address transmission is completed
 	while (((*I2C_SR1 >> 1) & 1) == 0);
-	if (((*I2C_SR1 >> 1) & 1) == 1)
-	{
-		UART_send_string("Slave Address sent successfully!\n");
-	}
 	// read SR1 and SR2 to clear ADDR bit
 	volatile int tmp = *I2C_SR1;
 	tmp = *I2C_SR2;
@@ -135,13 +164,11 @@ void I2C_Init()
 	uint32_t* GPIOB_OTYPER = (uint32_t*) (GPIOB_BASE_ADDR + 0x04);
 	uint32_t* GPIOB_PUPDR = (uint32_t*) (GPIOB_BASE_ADDR + 0x0C);
 	uint32_t* GPIOB_AFRL = (uint32_t*) (GPIOB_BASE_ADDR + 0x20);
-	uint32_t* GPIOB_OSPEEDR = (uint32_t*) (GPIOB_BASE_ADDR + 0x08);
 	*GPIOB_MODER &= ~(0xf << 12);	// clear bit
 	*GPIOB_MODER |= (0b1010 << 12);	// set PB6, PB7 at AF mode
 	*GPIOB_OTYPER |= (0b11 << 6);	// set open-drain mode
 	*GPIOB_PUPDR &= ~(0xf << 12);	// clear bit
-//	*GPIOB_PUPDR |= (0b0101 << 12);	// configure PB6, PB7 the I/O pull-up
-	*GPIOB_OSPEEDR &= ~(0b11 << 6);	// set low speed
+	*GPIOB_PUPDR |= (0b0101 << 12);	// configure PB6, PB7 the I/O pull-up
 	*GPIOB_AFRL &= ~(0xff << 24);	// clear bit
 	*GPIOB_AFRL |= (4 << 24) | (4 << 28);	// select AF04
 
