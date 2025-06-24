@@ -20,12 +20,12 @@ typedef enum
 	CMD = 0x00,
 	DATA = 0x40
 } ctrl_t;
-
+void OLED_print_lidOpen();
 void SSD1306_Init();
 void I2C_Init();
 void OLED_Init();
 void OLED_FillWhite();
-void OLED_FillBlack();
+void OLED_ClrScr();
 void I2C_start();
 void OLED_WriteData(uint8_t data);
 void OLED_WriteCMD(uint8_t cmd);

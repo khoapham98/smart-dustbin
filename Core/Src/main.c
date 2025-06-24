@@ -5,6 +5,7 @@
 #include "uart.h"
 #include "oled.h"
 
+
 int main()
 {
 	HAL_Init();
@@ -15,14 +16,10 @@ int main()
 	I2C_Init();
 	SSD1306_Init();
 
+	OLED_ClrScr();
 	while (1)
 	{
-		OLED_FillWhite();
-		delay_ms(2000);
-		OLED_FillBlack();
-		delay_ms(2000);
-		OLED_WriteData('A');
-		delay_ms(2000);
+		OLED_print_lidOpen();
 	}
 	return 0;
 }
