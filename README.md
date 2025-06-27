@@ -19,7 +19,7 @@ This repository contains the firmware design for a **Smart Dustbin** project usi
 | I2C OLED Display   | 1        | 128×64 SSD1306                      |
 | Power Supply (5 V) | 1        | Regulated 5 V for servo and sensors |
 | Connecting Wires   | —        | Jumper cables                       |
-| Breadboard / PCB   | —        | For prototyping or final layout     |
+| Breadboard / PCB   | —        | For prototyping    |
 
 ## Wiring Overview
 
