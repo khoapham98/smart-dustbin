@@ -25,7 +25,7 @@ void trig_HCSR04()
 {
 	uint32_t* GPIOC_ODR = (uint32_t*) (GPIOC_BASE_ADDR + 0x14);
 	*GPIOC_ODR |= (1 << 7);		// set TRIG to HIGH
-	delay_us(11);
+	delay_us(10);
 	*GPIOC_ODR &= ~(1 << 7);	// clear TRIG to LOW
 }
 
@@ -34,6 +34,7 @@ void trig_HCSR04()
  */
 uint32_t cal_distance()
 {
+	trig_HCSR04();
 	volatile uint32_t* GPIOC_IDR = (uint32_t*) (GPIOC_BASE_ADDR + 0x10);
 	while (((*GPIOC_IDR >> 6) & 1) == 0);	// wait until ECHO is HIGH
 

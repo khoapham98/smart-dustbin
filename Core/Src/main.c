@@ -5,6 +5,7 @@
 #include "uart.h"
 #include "oled.h"
 
+int distance = 0;
 
 int main()
 {
@@ -15,14 +16,23 @@ int main()
 	TIM3_Init();
 	I2C_Init();
 	SSD1306_Init();
-
 	OLED_ClrScr();
+	servo_ctrl(LEFT);
+	OLED_print_lidClose();
+
 	while (1)
 	{
-		OLED_print_lidOpen();
-		delay_ms(2000);
-		OLED_print_lidClose();
-		delay_ms(2000);
+		distance = cal_distance();
+		if (distance <= 10)
+		{
+			servo_ctrl(RIGHT);
+			OLED_print_lidOpen();
+			delay_ms(4000);
+			servo_ctrl(LEFT);
+			OLED_print_lidClose();
+		}
+		HAL_Delay(1000);
+
 	}
 	return 0;
 }

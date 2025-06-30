@@ -9,6 +9,8 @@
 #define INC_OLED_H_
 #define I2C1_BASE_ADDR 0x40005400
 #define SSD1306_ADDR 0x3C
+#define PAGE 4
+#define COLUMN 128
 
 typedef enum
 {
@@ -20,6 +22,7 @@ typedef enum
 	CMD = 0x00,
 	DATA = 0x40
 } ctrl_t;
+void print_left_to_right();
 void OLED_print_lidClose();
 void OLED_print_lidOpen();
 void SSD1306_Init();

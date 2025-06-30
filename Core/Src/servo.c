@@ -7,12 +7,12 @@
 #include "main.h"
 #include "servo.h"
 
-void servo_ctrl(int ms)
+void servo_ctrl(direc_t d)
 {
 	uint32_t* TIM3_CCR1 = (uint32_t*) (TIM3_BASE_ADDR + 0x34);
-	*TIM3_CCR1 = (ms * 100);
-//	uint32_t* TIM3_EGR = (uint32_t*) (TIM3_BASE_ADDR + 0x14);
-//	*TIM3_EGR |= (1 << 0);	// update generation
+	*TIM3_CCR1 = d;
+	uint32_t* TIM3_EGR = (uint32_t*) (TIM3_BASE_ADDR + 0x14);
+	*TIM3_EGR |= (1 << 0);	// update generation
 }
 
 /*
