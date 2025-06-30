@@ -20,6 +20,9 @@ int main()
 	while (1)
 	{
 		OLED_print_lidOpen();
+		delay_ms(2000);
+		OLED_print_lidClose();
+		delay_ms(2000);
 	}
 	return 0;
 }
