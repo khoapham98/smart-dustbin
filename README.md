@@ -29,14 +29,14 @@ This repository contains the firmware design for a **Smart Dustbin** project usi
 
 2. **Ultrasonic Sensor (HC-SR04)**
 
-   * VCC → 5 V
+   * VCC → 3 V
    * GND → GND
    * ECHO → PC6 (GPIO input)
    * TRIG → PC7 (GPIO output)
 
 3. **0.91 inch OLED (SSD1306)**
 
-   * VCC → 3 ~ 3.3 V
+   * VCC → 3 V
    * GND → GND
    * SDA → PB7 (I2C1\_SDA)
    * SCL → PB6 (I2C1\_SCL)
