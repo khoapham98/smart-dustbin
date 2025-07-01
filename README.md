@@ -2,6 +2,10 @@
 
 This repository contains the firmware design for a **Smart Dustbin** project using an STM32F411 microcontroller. The dustbin automatically opens and closes its lid when it detects an object nearby, and displays the lid status on an OLED screen.
 
+## 📹 Demo Video
+
+👉 [Watch demo video on YouTube](https://youtube.com/shorts/CIl2exy2Sw8)
+
 ## Features
 
 * **Automatic Lid Control**: Uses PWM to drive an SG90 servo motor (180) for opening and closing the lid.
